@@ -1,0 +1,73 @@
+{
+  "info": {
+    "name": "Movie API collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "const json = pm.response.json();",
+              "pm.test('Has status ok', () => pm.expect(json.status).to.eql('ok'));",
+              "pm.test('Has version', () => pm.expect(json).to.have.property('version'));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Recommend",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"movie\":[\"Space Odysse\"]}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/recommend",
+          "host": ["{{baseUrl}}"],
+          "path": ["recommend"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "const res = pm.response.json();",
+              "pm.test('Contains input title', () => pm.expect(res).to.have.property('Space Odysse'));",
+              "pm.test('Match is string and score is number', () => {",
+              "  const entry = res['Space Odysse'];",
+              "  pm.expect(entry).to.be.an('object');",
+              "  pm.expect(entry.match).to.be.a('string');",
+              "  pm.expect(entry.score).to.be.a('number');",
+              "  pm.expect(entry.score).to.be.above(0);",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
