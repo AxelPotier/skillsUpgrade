@@ -1,0 +1,4 @@
+# Exercise / reference datasets — not original work, not versioned.
+# Place the CSVs locally yourself (see bash/README.md and data_engineering/).
+bash/data/
+data_engineering/data/
