@@ -1,0 +1,19 @@
+[importlinter]
+root_package = app
+include_external_packages = True
+
+[importlinter:contract:1]
+name = api depends on domain, never the other way around
+type = layers
+layers =
+    app.api
+    app.domain
+
+[importlinter:contract:2]
+name = domain has no web framework dependency
+type = forbidden
+source_modules =
+    app.domain
+forbidden_modules =
+    fastapi
+    pydantic

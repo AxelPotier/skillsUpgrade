@@ -1,28 +1,18 @@
-"""Simple FastAPI app that recommends the closest movie from a list."""
+"""FastAPI app exposing the movie recommendation endpoints."""
 
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Union
 
 from fastapi import FastAPI
 from pydantic import BaseModel
-from rapidfuzz import process
+
+from .domain import recommend_movie
 
 app = FastAPI()
 API_VERSION = "1.0.0"
 
-MOVIE_LIST = ["Space Odyssey", "Gladiator", "7 years in Tibet"]
-
 
 class RecommendRequest(BaseModel):
     movie: List[str]
-
-
-def recommend_movie(text: str) -> Tuple[str, float]:
-    """Return the best match and its score for `text` against MOVIE_LIST.
-
-    Uses rapidfuzz.process.extractOne which returns (match, score, index).
-    """
-    best = process.extractOne(text, MOVIE_LIST)
-    return (best[0], float(best[1]))
 
 
 @app.get("/health")
@@ -41,4 +31,3 @@ async def recommend_movies(request: RecommendRequest) -> Dict[str, Dict[str, Uni
         match_title, score = recommend_movie(movie)
         result[movie] = {"match": match_title, "score": score}
     return result
-

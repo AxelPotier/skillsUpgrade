@@ -1,14 +1,10 @@
 services:
   api:
     image: reco:1.0.0
-    container_name: "reco"
     build:
+      context: .
       dockerfile: docker/dockerfile
-      args:
-        - APP_PORT=${APP_PORT}
     ports:
-      - "${APP_PORT}:${APP_PORT}"
-    env_file:
-      - .env
+      - "8080:8080"
     volumes:
       - ./src:/app/src
